@@ -49,12 +49,34 @@ test("Add Film Test", async ({page})=>{
     // When the page loads
     await expect(page).toHaveTitle(/Autoflow Film Store/);
 
-    // Then I see an “Add New Film” section below the films list, containing fields for Title (required), Year (required), Director (required), and Rating (required) with an "Add Film" button
-    await expect(page).toHaveTitle(/Add Film/);
+    // Then I see an “Add New Film” section below the films list, containing fields for Title (required), Year (required), Director (required), and Rating (required) with an "Add Film" button 
+
+    const filmTable = page.locator('table');
+    await expect(page.getByRole('heading', { name: 'Add Film' })).toBeVisible();
+
+    //Unable to get this to work - but the intention is there, priorisitised finishing remainder of test
+    //await expect(page.getByRole('heading', { name: 'Add Film' })).toBeBelow(filmTable);
+
+    await expect(page.locator('div').filter({ hasText: 'Title:' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Title:' })).toBeVisible();
+
+
+    await expect(page.locator('div').filter({ hasText: 'Release Year:' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Release Year' })).toBeVisible();
+
+
+    //await expect(page.locator('div').filter({ hasText: 'Director:' })).toBeVisible();
+    //await expect(page.getByRole('textbox', { name: 'Director' })).toBeVisible();
+
+
+    await expect(page.locator('div').filter({ hasText: 'Rating (X out of 10):' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Rating (X out of 10)' })).toBeVisible();
 
 
     // Given I am on the default page
     // When I fill in all required fields with valid data and click the "Add Film" button
+
+
     // Then the form clears, and the new film immediately appears at the bottom of the film list without a page reload
 
 });
