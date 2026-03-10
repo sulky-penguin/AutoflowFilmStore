@@ -3,28 +3,39 @@ import { FilmPage } from '../pages/FilmPage';
 
 test("Film List Test", async ({page})=>{
     const filmPage = new FilmPage(page);
-    //// Given there are existing films in the collection ////
-    //// When I open the default page ////
+    // ==========================================
+    // Given there are existing films in the collection
+    // When I open the default page 
+    // ==========================================
     await page.goto('http://localhost:4200/');
     await expect(page).toHaveTitle(/Autoflow Film Store/);
     
-    //// Then I see a list of films showing the title, release year, director, and rating for each film ////
+    // ==========================================
+    // Then I see a list of films showing the title, release year, director, and rating for each film 
+    // ==========================================
+
     // Validate all headings are correct
     await expect(filmPage.filmListHeaderRow.locator('th').first()).toHaveText('Name');
     await expect(filmPage.filmListHeaderRow.locator('th').nth(1)).toHaveText('Released');
     await expect(filmPage.filmListHeaderRow.locator('th').nth(2)).toHaveText('Director');
     await expect(filmPage.filmListHeaderRow.locator('th').nth(3)).toHaveText('Rating');
 
-    //// Given films are displayed in the list ////
-    //const rows = page.locator('tbody tr');
+    // ==========================================
+    // Given films are displayed in the list 
+    // ==========================================
     const rowCount = await filmPage.filmList.count(); //change this?
     expect(rowCount).toBeGreaterThan(0);
 
-    //// When I scan the list ////
+    // ==========================================
+    // When I scan the list 
+    // ==========================================
+
     //Iterate through table and assert each column
     //Assumption: Movie List is dynamic and subject to change, thus the current set names won't always be the same.
     for (let i = 0; i < rowCount; i++) {
-         //// Then each film shows the name of the film, a 4-digit year (e.g., 1999), the directors name, and a rating in the allowed range of 0–1 ////
+        // ==========================================
+        // Then each film shows the name of the film, a 4-digit year (e.g., 1999), the directors name, and a rating in the allowed range of 0–1
+        // ==========================================
 
         //Assert each title cell is not empty
         await expect(filmPage.filmList.nth(i).locator('th')).not.toBeEmpty();
@@ -48,13 +59,19 @@ test("Add Film Test", async ({page})=>{
     const rating = "8"
     const filmPage = new FilmPage(page);
 
+    // ==========================================
     // Given I am on the default page
+    // ==========================================
     await page.goto('http://localhost:4200/');
 
+    // ==========================================
     // When the page loads
+    // ==========================================
     await expect(page).toHaveTitle(/Autoflow Film Store/);
 
+    // ==========================================
     // Then I see an “Add New Film” section below the films list, containing fields for Title (required), Year (required), Director (required), and Rating (required) with an "Add Film" button 
+    // ==========================================s
     await expect(page.getByRole('heading', { name: 'Add Film' })).toBeVisible();
 
     //Unable to get this to work - but the intention is there, priorisitised finishing remainder of test
@@ -78,9 +95,9 @@ test("Add Film Test", async ({page})=>{
 
     //await expect(page.getByRole('button', { name: 'Add Film' })).toBeVisible(); //Failure here
     
-
-
-    // And When I fill in all required fields with valid data and click the "Add Film" button
+    // ==========================================
+    // And when I fill in all required fields with valid data and click the "Add Film" button
+    // ==========================================
     const initialRowCount = await filmPage.filmList.count();
 
     await filmPage.formTitleTextBox.fill(movieName);
@@ -89,8 +106,9 @@ test("Add Film Test", async ({page})=>{
     await filmPage.formRatingTextBox.fill(rating);
     await page.getByRole('button', { name: 'Ad Film' }).click(); //Known typo here
 
-
+    // ==========================================
     // Then the form clears, and the new film immediately appears at the bottom of the film list without a page reload
+    // ==========================================
     await expect(filmPage.filmList).toHaveCount(initialRowCount + 1); //Confirm table row has updated
 
     const lastRow = filmPage.filmList.last();
@@ -110,16 +128,22 @@ test("Add Film Test", async ({page})=>{
 test("Form Validation Test - Error Messages", async ({page})=>{
     const filmPage = new FilmPage(page);
 
+    // ==========================================
     // Given I am on the default page
+    // ==========================================
     await page.goto('http://localhost:4200/');
 
     const initialRowCount = await filmPage.filmList.count(); // Get initial row count to compare after
 
+    // ==========================================
     // When I click the "Add Film" button without filling in one or more required fields
+    // ==========================================
     await page.getByRole('button', { name: 'Ad Film' }).click(); //Known typo here
 
-
+    // ==========================================
     // Then inline error messages appear next to each missing field, explaining what is required, and the new film is not added to the list
+    // ==========================================
+
     // Assert inline errors for Title 
     const expectedTitleError = filmPage.formTitleDiv.locator('.errorText');
     await expect(expectedTitleError).toBeVisible();
@@ -148,12 +172,16 @@ const releaseFieldValues = ["19943", "ABCD"];
 
 for (const releaseYear of releaseFieldValues) {
     test(`Form Validation Test - Reject "${releaseYear}"`, async ({ page }) => {
+        // ==========================================
         // Given I am on the default page
+        // ==========================================
         const filmPage = new FilmPage(page);
         await page.goto('http://localhost:4200/');
         const initialRowCount = await filmPage.filmList.count(); // Get initial row count to compare after
 
+        // ==========================================
         // When I enter a non-numeric or non-4-digit year and click the "Add Film" button
+        // ==========================================
         await filmPage.formTitleTextBox.fill("Generic Movie");
         await filmPage.formReleaseYearTextBox.fill(releaseYear);
         await filmPage.formDirectorTextBox.fill("James Moore");
@@ -161,7 +189,9 @@ for (const releaseYear of releaseFieldValues) {
 
         await page.getByRole('button', { name: 'Ad Film' }).click(); //Known typo here
     
+        // ==========================================
         // Then an inline validation message appears for the Year field explaining the valid format (e.g., “Enter a 4-digit year between 1888 and current year”), and the film is not added
+        // ==========================================
         const expectedReleaseYearError = filmPage.formReleaseYearDiv.locator('.errorText');
         await expect(expectedReleaseYearError).toBeVisible();
         await expect(expectedReleaseYearError).toHaveText('Enter a 4-digit year between 1888 and current year');
@@ -173,13 +203,15 @@ for (const releaseYear of releaseFieldValues) {
 
 test("Form Validation Test - Reject out of range Rating", async ({page})=>{
     const filmPage = new FilmPage(page);
-
+    // ==========================================
     // Given I am on the default page
+    // ==========================================
     await page.goto('http://localhost:4200/');
     const initialRowCount = await filmPage.filmList.count(); // Get initial row count to compare after
 
-
+    // ==========================================
     // When I enter a rating outside the allowed range and click the "Add Film" button
+    // ==========================================
     await filmPage.formTitleTextBox.fill("Generic Movie");
     await filmPage.formReleaseYearTextBox.fill("2016");
     await filmPage.formDirectorTextBox.fill("James Moore");
@@ -187,12 +219,14 @@ test("Form Validation Test - Reject out of range Rating", async ({page})=>{
 
     await page.getByRole('button', { name: 'Ad Film' }).click(); //Known typo here
 
+    // ==========================================
     // Then I see an inline error message showing the acceptable range (e.g., 1–10), and the film is not added
+    // ==========================================
     const expectedRatingError = filmPage.formRatingDiv.locator('.errorText');
     await expect(expectedRatingError).toBeVisible();
     await expect(expectedRatingError).toHaveText('please enter a a value between 1-10'); //No error message appears, made an assumption on wording
     await expect(filmPage.filmList).toHaveCount(initialRowCount); //Confirm table row has not changed
-    
+
  });
 
 
