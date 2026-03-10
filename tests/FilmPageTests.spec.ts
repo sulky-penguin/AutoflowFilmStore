@@ -45,7 +45,7 @@ test("Add Film Test", async ({page})=>{
     const movieName = "Avatar: Fire and Ash";
     const releaseYear = "2025";
     const director = "James Cameron";
-    const rating = "8 / 10"
+    const rating = "8"
     const filmPage = new FilmPage(page);
 
     // Given I am on the default page
@@ -107,7 +107,7 @@ test("Add Film Test", async ({page})=>{
     //await expect(lastRow.locator('td').nth(2)).toHaveText(rating); // Failure here
 });
 
-test("Form Validation Test", async ({page})=>{
+test("Form Validation Test - Error Messages", async ({page})=>{
     const filmPage = new FilmPage(page);
 
     // Given I am on the default page
@@ -133,29 +133,70 @@ test("Form Validation Test", async ({page})=>{
     // Assert inline errors for Director 
     const expectedDirectorError = filmPage.formDirectorDiv.locator('.errorText');
     await expect(expectedDirectorError).toBeVisible();
-    await expect(expectedDirectorError).toHaveText('please enter a release year'); //assuming expected error message
+    await expect(expectedDirectorError).toHaveText('please enter a name'); //assuming expected error message
 
-    // Assert inline errors for Director 
+    // Assert inline errors for Rating 
     const expectedRatingError = filmPage.formRatingDiv.locator('.errorText');
     await expect(expectedRatingError).toBeVisible();
-    await expect(expectedRatingError).toHaveText('please enter a release year'); //assuming expected error message
+    await expect(expectedRatingError).toHaveText('please enter a valid rating'); //assuming expected error message
 
     await expect(filmPage.filmList).toHaveCount(initialRowCount); //Confirm table row has not changed
 
+    });
 
+const releaseFieldValues = ["19943", "ABCD"];
+
+for (const releaseYear of releaseFieldValues) {
+    test(`Form Validation Test - Reject "${releaseYear}"`, async ({ page }) => {
+        // Given I am on the default page
+        const filmPage = new FilmPage(page);
+        await page.goto('http://localhost:4200/');
+        const initialRowCount = await filmPage.filmList.count(); // Get initial row count to compare after
+
+        // When I enter a non-numeric or non-4-digit year and click the "Add Film" button
+        await filmPage.formTitleTextBox.fill("Generic Movie");
+        await filmPage.formReleaseYearTextBox.fill(releaseYear);
+        await filmPage.formDirectorTextBox.fill("James Moore");
+        await filmPage.formRatingTextBox.fill("3");
+
+        await page.getByRole('button', { name: 'Ad Film' }).click(); //Known typo here
+    
+        // Then an inline validation message appears for the Year field explaining the valid format (e.g., “Enter a 4-digit year between 1888 and current year”), and the film is not added
+        const expectedReleaseYearError = filmPage.formReleaseYearDiv.locator('.errorText');
+        await expect(expectedReleaseYearError).toBeVisible();
+        await expect(expectedReleaseYearError).toHaveText('Enter a 4-digit year between 1888 and current year');
+
+        await expect(filmPage.filmList).toHaveCount(initialRowCount); //Confirm table row has not changed
+  });
+}
+
+
+test("Form Validation Test - Reject out of range Rating", async ({page})=>{
+    const filmPage = new FilmPage(page);
 
     // Given I am on the default page
     await page.goto('http://localhost:4200/');
+    const initialRowCount = await filmPage.filmList.count(); // Get initial row count to compare after
 
-    const movieName = "Avatar: Fire and Ash";
-    const releaseYear = "2025";
-    const director = "James Cameron";
-    const rating = "8 / 10"
 
-    // When I enter a non-numeric or non-4-digit year and click the "Add Film" button
-    // Then an inline validation message appears for the Year field explaining the valid format (e.g., “Enter a 4-digit year between 1888 and current year”), and the film is not added
-
-    // Given I am on the default page
     // When I enter a rating outside the allowed range and click the "Add Film" button
+    await filmPage.formTitleTextBox.fill("Generic Movie");
+    await filmPage.formReleaseYearTextBox.fill("2016");
+    await filmPage.formDirectorTextBox.fill("James Moore");
+    await filmPage.formRatingTextBox.fill("12");
+
+    await page.getByRole('button', { name: 'Ad Film' }).click(); //Known typo here
+
     // Then I see an inline error message showing the acceptable range (e.g., 1–10), and the film is not added
-});
+    const expectedRatingError = filmPage.formRatingDiv.locator('.errorText');
+    await expect(expectedRatingError).toBeVisible();
+    await expect(expectedRatingError).toHaveText('please enter a a value between 1-10'); //No error message appears, made an assumption on wording
+    await expect(filmPage.filmList).toHaveCount(initialRowCount); //Confirm table row has not changed
+    
+ });
+
+
+
+
+
+
