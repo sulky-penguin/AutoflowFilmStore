@@ -19,12 +19,12 @@ export class FilmPage {
         this.filmListHeaderRow = page.locator('thead tr').first();
         this.formTitleDiv = page.locator('div').filter({ hasText: 'Title:' }); 
         this.formReleaseYearDiv = page.locator('div').filter({ hasText: 'Release Year:' }); 
-        this.formDirectorDiv = page.locator('div').filter({ hasText: 'Director:' }); 
+        this.formDirectorDiv = page.locator('div').filter({ hasText: 'Director:' });
         this.formRatingDiv = page.locator('div').filter({ hasText: 'Rating (X out of 10):' }); 
 
-        this.formTitleTextBox = page.getByRole('textbox', { name: 'Title:' });
-        this.formReleaseYearTextBox = page.getByRole('textbox', { name: 'Release Year' });
-        this.formDirectorTextBox = page.getByRole('textbox', { name: 'Director' });
-        this.formRatingTextBox = page.getByRole('textbox', { name: 'Rating (X out of 10)' });
+        this.formTitleTextBox = this.formTitleDiv.getByRole('textbox');
+        this.formReleaseYearTextBox = this.formReleaseYearDiv.getByRole('textbox');
+        this.formDirectorTextBox = this.formDirectorDiv.getByRole('textbox');
+        this.formRatingTextBox = this.formRatingDiv.getByRole('textbox');
     }
 }
