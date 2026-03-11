@@ -255,6 +255,7 @@ test.describe("Form Validation Tests", ()=>{
 });
 
 
+// Set up a mobile device in config and include running that in the test run instead?
 test.describe("Responsive Layout Tests", ()=>{
     // ==========================================
     // Given my viewport width is 375px or less (mobile)
@@ -275,6 +276,30 @@ test.describe("Responsive Layout Tests", ()=>{
         // ==========================================
         // Then text remains readable and interactive controls span the width of the screen without scrolling
         // ==========================================
+        const viewport = page.viewportSize();
 
+        //Confirm Title is visible
+        await expect(page.getByRole('heading', { name: 'Autoflow Film Store' })).toBeVisible;
+        //Confirm whole table is within viewport
+        await expect(page.locator('table')).toBeInViewport();
+
+        //Table headings are visible
+        await expect(page.getByRole('columnheader', { name: 'Name' })).toBeVisible;
+        await expect(page.getByRole('columnheader', { name: 'Released' })).toBeVisible;
+        await expect(page.getByRole('columnheader', { name: 'Director' })).toBeVisible;
+        await expect(page.getByRole('columnheader', { name: 'Rating' })).toBeVisible;
+        
+
+        //Confirm Add film heading is visible
+        await expect(page.getByRole('heading', { name: 'Add Film' })).toBeVisible;
+
+        //Confirm Interactive elements are within viewport
+        await page.getByRole('button', { name: 'Ad Film' }).scrollIntoViewIfNeeded(); // Needed explicit scroll here
+
+        await expect(filmPage.formTitleTextBox).toBeInViewport();
+        await expect(filmPage.formReleaseYearTextBox).toBeInViewport();
+        await expect(filmPage.formDirectorTextBox).toBeInViewport();
+        await expect(filmPage.formRatingTextBox).toBeInViewport();
+        await expect(page.getByRole('button', { name: 'Ad Film' })).toBeInViewport();
     });
 });
