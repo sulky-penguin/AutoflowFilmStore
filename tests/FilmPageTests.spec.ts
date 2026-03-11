@@ -144,13 +144,6 @@ test.describe("Add Film Tests", ()=>{
         //Assert each rating matches float / 10 format and is not empty
         //await expect(lastRow.locator('td').nth(2)).toHaveText(rating); // Failure here
     });
-
-
-
-
-
-    
-
 });
 
 test.describe("Form Validation Tests", ()=>{
