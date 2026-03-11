@@ -119,12 +119,7 @@ test.describe("Add Film Tests", ()=>{
         // And when I fill in all required fields with valid data and click the "Add Film" button
         // ==========================================
         const initialRowCount = await filmPage.filmList.count();
-
-        await filmPage.formTitleTextBox.fill(movieName);
-        await filmPage.formReleaseYearTextBox.fill(releaseYear);
-        await filmPage.formDirectorTextBox.fill(director);
-        await filmPage.formRatingTextBox.fill(rating);
-        await page.getByRole('button', { name: 'Ad Film' }).click(); //Known typo here
+        await filmPage.addFilm(movieName,releaseYear,director,rating);
 
         // ==========================================
         // Then the form clears, and the new film immediately appears at the bottom of the film list without a page reload
@@ -337,7 +332,7 @@ test.describe("Accessibility Tests", ()=>{
         // ==========================================
         // Given I use only the keyboard
         // ==========================================
-            
+
 
         // ==========================================
         // When I tab through interactive elements
