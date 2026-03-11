@@ -157,7 +157,7 @@ test.describe("Form Validation Tests", ()=>{
         // ==========================================
         // When I click the "Add Film" button without filling in one or more required fields
         // ==========================================
-        await page.getByRole('button', { name: 'Ad Film' }).click(); //Known typo here
+        await filmPage.addFilmButton.click(); //Known typo here
 
         // ==========================================
         // Then inline error messages appear next to each missing field, explaining what is required, and the new film is not added to the list
@@ -198,7 +198,7 @@ test.describe("Form Validation Tests", ()=>{
         await filmPage.formDirectorTextBox.fill("James Moore");
         await filmPage.formRatingTextBox.fill("12");
 
-        await page.getByRole('button', { name: 'Ad Film' }).click(); //Known typo here
+        await filmPage.addFilmButton.click(); //Known typo here
 
         // ==========================================
         // Then I see an inline error message showing the acceptable range (e.g., 1–10), and the film is not added
@@ -228,7 +228,7 @@ test.describe("Form Validation Tests", ()=>{
             await filmPage.formDirectorTextBox.fill("James Moore");
             await filmPage.formRatingTextBox.fill("3");
 
-            await page.getByRole('button', { name: 'Ad Film' }).click(); //Known typo here
+            await filmPage.addFilmButton.click(); //Known typo here
         
             // ==========================================
             // Then an inline validation message appears for the Year field explaining the valid format (e.g., “Enter a 4-digit year between 1888 and current year”), and the film is not added
@@ -280,13 +280,13 @@ test.describe("Responsive Layout Tests", ()=>{
         await expect(page.getByRole('heading', { name: 'Add Film' })).toBeVisible;
 
         //Confirm Interactive elements are within viewport
-        await page.getByRole('button', { name: 'Ad Film' }).scrollIntoViewIfNeeded(); // Needed explicit scroll here
+        await filmPage.addFilmButton.scrollIntoViewIfNeeded(); // Needed explicit scroll here
 
         await expect(filmPage.formTitleTextBox).toBeInViewport();
         await expect(filmPage.formReleaseYearTextBox).toBeInViewport();
         await expect(filmPage.formDirectorTextBox).toBeInViewport();
         await expect(filmPage.formRatingTextBox).toBeInViewport();
-        await expect(page.getByRole('button', { name: 'Ad Film' })).toBeInViewport();
+        await expect(filmPage.addFilmButton).toBeInViewport();
     });
 });
 
@@ -326,21 +326,27 @@ test.describe("Accessibility Tests", ()=>{
 
     });
 
-        test(`Keyboard only Navigation`, async ({page})=>{
+    test(`Keyboard only Navigation`, async ({page})=>{
         const filmPage = new FilmPage(page);
+        const expectedOrder = [
+                filmPage.formTitleTextBox,
+                filmPage.formReleaseYearTextBox,
+                filmPage.formDirectorTextBox,
+                filmPage.formRatingTextBox,
+                filmPage.addFilmButton
+            ];
 
         // ==========================================
         // Given I use only the keyboard
-        // ==========================================
-
-
-        // ==========================================
         // When I tab through interactive elements
-        // ==========================================
-
-        // ==========================================
         // Then focus moves in a logical order, all controls are reachable, and a visible focus indicator is always present
         // ==========================================
+        await page.keyboard.press('Tab');
 
+        for (const element of expectedOrder) {
+            await expect(element).toBeFocused();
+
+            await page.keyboard.press('Tab');
+            }
     });
 });

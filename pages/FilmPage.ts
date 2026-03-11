@@ -14,6 +14,9 @@ export class FilmPage {
     readonly formDirectorTextBox: Locator; 
     readonly formRatingTextBox: Locator; 
 
+    readonly addFilmButton: Locator; 
+
+
 
     constructor(page: Page) {
         this.page = page;
@@ -28,6 +31,8 @@ export class FilmPage {
         this.formReleaseYearTextBox = this.formReleaseYearDiv.getByRole('textbox');
         this.formDirectorTextBox = this.formDirectorDiv.getByRole('textbox');
         this.formRatingTextBox = this.formRatingDiv.getByRole('textbox');
+
+        this.addFilmButton = page.getByRole('button', { name: 'Ad Film' }); //Known typo here
     }
 
     async addFilm(title: string, year: string, director: string, rating: string) {
