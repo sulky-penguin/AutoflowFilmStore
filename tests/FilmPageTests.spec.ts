@@ -255,20 +255,26 @@ test.describe("Form Validation Tests", ()=>{
 });
 
 
- test("Responsive layout Test", async ({page})=>{
-    const filmPage = new FilmPage(page);
+test.describe("Responsive Layout Tests", ()=>{
     // ==========================================
     // Given my viewport width is 375px or less (mobile)
     // ==========================================
+    test.use({ isMobile: true, viewport: { width: 375, height: 667 } });
 
+    test.beforeEach(async ({ page }) => {
+        await page.goto('http://localhost:4200/');
+    });
 
-    // ==========================================
-    // When the page loads
-    // ==========================================
+    test(`Responsive layout Test`, async ({page})=>{
+        const filmPage = new FilmPage(page);
+        // ==========================================
+        // When the page loads
+        // ==========================================
+        await expect(page).toHaveTitle(/Autoflow Film Store/);
 
+        // ==========================================
+        // Then text remains readable and interactive controls span the width of the screen without scrolling
+        // ==========================================
 
-    // ==========================================
-    // Then text remains readable and interactive controls span the width of the screen without scrolling
-    // ==========================================
-
- });
+    });
+});
