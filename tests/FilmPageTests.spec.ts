@@ -247,8 +247,6 @@ test.describe("Form Validation Tests", ()=>{
     }
 });
 
-
-// Set up a mobile device in config and include running that in the test run instead?
 test.describe("Responsive Layout Tests", ()=>{
     // ==========================================
     // Given my viewport width is 375px or less (mobile)
@@ -294,5 +292,60 @@ test.describe("Responsive Layout Tests", ()=>{
         await expect(filmPage.formDirectorTextBox).toBeInViewport();
         await expect(filmPage.formRatingTextBox).toBeInViewport();
         await expect(page.getByRole('button', { name: 'Ad Film' })).toBeInViewport();
+    });
+});
+
+test.describe("Accessibility Tests", ()=>{
+    test.beforeEach(async ({ page }) => {
+        await page.goto('http://localhost:4200/');
+    });
+
+    test(`Logical Heading Hierarchy`, async ({page})=>{
+        const filmPage = new FilmPage(page);
+        // ==========================================
+        // Given the Film Store is loaded
+        // ==========================================
+        await expect(page).toHaveTitle(/Autoflow Film Store/);
+
+        // ==========================================
+        // When I inspect the page
+        // ==========================================
+
+        // Made assumptions here about the expected heading levels. Currently they fail as Title is h2 and sub-heading is h4
+        const title = page.getByRole('heading', { level: 1 });
+        const subheading1 = page.getByRole('heading', { level: 2 }).first();
+        const columnHeaders = page.getByRole('columnheader');
+
+        
+        // ==========================================
+        // Then there is a logical heading hierarchy
+        // ==========================================
+        await expect(title).toHaveCount(1);
+        await expect(title).toHaveText("Autoflow Film Store");
+        await expect(subheading1).toHaveText("Add Film");
+
+
+        // Checks the expected amount of column headers
+        await expect(columnHeaders).toHaveCount(4); 
+        await expect(columnHeaders).toHaveText(['Name', 'Released', 'Director', 'Rating']);
+
+    });
+
+        test(`Keyboard only Navigation`, async ({page})=>{
+        const filmPage = new FilmPage(page);
+
+        // ==========================================
+        // Given I use only the keyboard
+        // ==========================================
+            
+
+        // ==========================================
+        // When I tab through interactive elements
+        // ==========================================
+
+        // ==========================================
+        // Then focus moves in a logical order, all controls are reachable, and a visible focus indicator is always present
+        // ==========================================
+
     });
 });
