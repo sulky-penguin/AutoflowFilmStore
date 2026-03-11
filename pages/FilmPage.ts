@@ -24,7 +24,7 @@ export class FilmPage {
         this.filmListHeaderRow = page.locator('thead tr').first();
         this.formTitleDiv = page.locator('div').filter({ hasText: 'Title:' }); 
         this.formReleaseYearDiv = page.locator('div').filter({ hasText: 'Release Year:' }); 
-        this.formDirectorDiv = page.locator('div').filter({ hasText: 'Directer:' }); //Known spelling issue! Just set it this way for sake of demo
+        this.formDirectorDiv = page.locator('div').filter({ hasText: 'Director:' }); //Typo currently exists in app
         this.formRatingDiv = page.locator('div').filter({ hasText: 'Rating (X out of 10):' }); 
 
         this.formTitleTextBox = this.formTitleDiv.getByRole('textbox');
