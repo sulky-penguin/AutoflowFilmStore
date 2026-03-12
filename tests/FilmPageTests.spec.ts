@@ -85,8 +85,9 @@ test.describe("Add Film Tests", ()=>{
         // ==========================================s
         await expect(page.getByRole('heading', { name: 'Add Film' })).toBeVisible();
 
-        //Unable to get this to work - but the intention is there, priorisitised finishing remainder of test
-        //await expect(page.getByRole('heading', { name: 'Add Film' })).toBeBelow(filmPage.filmList);
+        //I realise I haven't placed any assertions to confirm Add film section is below the film table
+        //AFter writing the responsive layout tests i came across boundingBox class
+        //I would use that and evaluate against the y axis of the relevant element
 
         //Assert "Title" field name and placeholder
         await expect(filmPage.formTitleDiv).toBeVisible();
