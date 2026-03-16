@@ -1,0 +1,34 @@
+url: http://localhost:4200/
+---
+# Given I am on the default page
+- launchApp
+
+# When the page loads Then I see an “Add New Film” section below the films list
+- assertVisible:
+    text: Add Film
+    below:
+      text: Autoflow Film Store
+
+# containing fields for Title (required), Year (required), Director (required), and Rating (required) with an "Add Film" button
+# Maestro is unable to discern if an item is a text box
+# I am leveraging what is visible and expected in terms of the UI
+# Here I am asserting that title (textbox placeholder) is below the Title: field
+- assertVisible:
+    text: Title
+    below:
+      text: "Title:"
+
+- assertVisible:
+    text: Release Year
+    below:
+      text: "Release Year:"
+
+- assertVisible:
+    text: Director
+    below:
+      text: "Director:"
+
+- assertVisible:
+    text: Add Film
+    below:
+      text: "Rating (X out of 10)"

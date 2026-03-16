@@ -1,0 +1,35 @@
+url: http://localhost:4200/
+---
+# Given I am on the default page
+- launchApp
+
+# When I fill in all required fields with valid data and click the "Add Film" button
+- runFlow:
+    file: ../../flows/AddFilmFLow.yaml
+    env:
+      MOVIE_NAME: "The Garfield Movie"
+      RELEASE_YEAR: "2024"
+      DIRECTOR: "Mark Dindal"
+      RATING: "10"
+# Then the form clears, and the new film immediately appears at the bottom of the film list without a page reload
+
+# Depends on there being seeded data here
+- assertVisible:
+    text: The Garfield Movie
+    below:
+      text: "The Fifth Element"
+
+- assertVisible:
+    text: "2024"
+    below:
+      text: "1997"
+
+- assertVisible:
+    text: "Mark Dindal"
+    below:
+      text: ""
+
+- assertVisible:
+    text: "10 / 10"
+    below:
+      text: "7.6 / 10"

@@ -1,0 +1,26 @@
+url: http://localhost:4200/
+---
+- launchApp
+# Assert column headers are below title
+- assertVisible:
+    text: Name
+    below:
+      text: Autoflow Film Store
+- assertVisible:
+    text: Released
+    below:
+      text: Autoflow Film Store
+- assertVisible:
+    text: Director
+    below:
+      text: Autoflow Film Store
+- assertVisible:
+    text: Rating
+    below:
+      text: Autoflow Film Store
+# Here I am limited by what Maestro can do
+# I want to assert the table contents similiar to what "Validate film details" test does in my playwright branch
+# But Maestro evaulates the screen and not the code
+# So I cannot loop through the table of x elements as Maestro does not know how many items are in the table, only that it is there
+# I could assert each table cell meets the expected regex but I feel that does not make a true test as this table is dynamic and is subject to change
+# Unless the data is seeded and expected, which is how I worked with a lot of mobile tests previously

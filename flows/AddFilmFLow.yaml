@@ -1,0 +1,13 @@
+url: http://localhost:4200/
+---
+- tapOn: title
+- inputText: ${MOVIE_NAME}
+- tapOn: Release Year
+- inputText: ${RELEASE_YEAR}
+- tapOn:
+    text: Director
+    index: 1
+- inputText: ${DIRECTOR}
+- tapOn: Rating (X out of 10)
+- inputText: ${RATING}
+- tapOn: Ad Film

@@ -1,5 +1,0 @@
-# example.yaml
-url: http://localhost:4200/
----
-- launchApp
-- assertVisible: Autoflow Film Store
